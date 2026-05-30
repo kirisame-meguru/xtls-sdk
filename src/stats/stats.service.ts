@@ -10,6 +10,7 @@ import {
     GetAllOutboundsStatsResponseModel,
     GetOutboundStatsResponseModel,
     GetUsersStatsResponseModel,
+    GetAllUsersInboundsStatsResponseModel,
     UserStat,
 } from './models';
 import {
@@ -310,6 +311,57 @@ export class StatsService {
             return {
                 isOk: false,
                 ...STATS_ERRORS.GET_ALL_INBOUNDS_STATS_ERROR(message),
+            };
+        }
+    }
+
+    /**
+     * Retrieves per-user-per-inbound traffic statistics from the Xray server.
+     *
+     * Queries the combined counters emitted by xray-core for tracked inbounds:
+     *   useri>>>{username}>>>inbound>>>{tag}>>>traffic>>>{uplink|downlink}
+     *
+     * The query pattern `useri>>>` is intentionally disjoint from `user>>>`,
+     * `inbound>>>` and `outbound>>>` (Xray matches by substring containment), so
+     * passing `reset: true` here resets ONLY the combined counters and never
+     * disturbs the per-user / per-inbound scrapes.
+     *
+     * @param reset - Whether to reset (zero) the counters after reading them
+     * @returns A promise resolving to an SDK response. On success, `data.usersInbounds`
+     *          holds the per-user-per-inbound statistics; empty if the deployed
+     *          xray-core does not emit these counters.
+     *
+     * @example
+     * ```typescript
+     * const stats = new StatsService(channel);
+     * const response = await stats.getAllUsersInboundsStats(true);
+     *
+     * if (response.isOk) {
+     *   console.log(response.data.usersInbounds);
+     * }
+     * ```
+     */
+    public async getAllUsersInboundsStats(
+        reset: boolean = false,
+    ): Promise<ISdkResponse<GetAllUsersInboundsStatsResponseModel>> {
+        try {
+            const response = await this.client.queryStats({
+                pattern: 'useri>>>',
+                reset,
+            });
+
+            return {
+                isOk: true,
+                data: new GetAllUsersInboundsStatsResponseModel(response),
+            };
+        } catch (error) {
+            let message = '';
+            if (error instanceof Error) {
+                message = error.message;
+            }
+            return {
+                isOk: false,
+                ...STATS_ERRORS.GET_ALL_USERS_INBOUNDS_STATS_ERROR(message),
             };
         }
     }
