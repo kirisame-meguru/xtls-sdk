@@ -1,8 +1,8 @@
 name: Deploy lib
+# [remnawave-fork] disabled: publishes @remnawave/xtls-sdk to public npm (not possible for the fork).
+# The SDK is vendored into node as a tarball instead. Manual-only.
 on:
-  push:
-    tags:
-      - '*'
+  workflow_dispatch:
 jobs:
   send-start-deploy-telegram-message:
     name: Send Telegram message

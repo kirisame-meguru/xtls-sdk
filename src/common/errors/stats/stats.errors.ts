@@ -36,4 +36,9 @@ export const STATS_ERRORS = {
         code: 'A010',
         message: `Failed to get users stats: ${message}`,
     }),
+    GET_ALL_USERS_INBOUNDS_STATS_ERROR: (message: string) => ({
+        // [remnawave-fork] F900+ band reserved for fork features; upstream-conventional code A011 (see FORK.md).
+        code: 'F900',
+        message: `Failed to get all users inbounds stats: ${message}`,
+    }),
 } as const;
