@@ -1,7 +1,7 @@
 # Fork allocation ledger — xtls-sdk
 
-This fork (`kirisame-meguru/xtls-sdk`) carries the **per-user-per-inbound traffic stats** feature on
-branch `per-user-per-inbound-traffic-stats`. See `../FORK-RESILIENCE.md` for the sync playbook.
+This fork (`kirisame-meguru/xtls-sdk`) carries the **per-user-per-inbound traffic stats** feature directly
+on **`main`** (`main` is the feature branch). See `../FORK-RESILIENCE.md` for the sync playbook.
 
 ## Branch base: current upstream (0.16.x)
 
